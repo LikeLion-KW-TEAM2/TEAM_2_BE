@@ -41,7 +41,8 @@ jobs:
         path: ./src/main/frontend
         repository: LikeLion-KW-TEAM2/TEAM_2_FE
         ref: main
-    - run: ls -al ./src/main/  # 테스트용 출력
+    - run: mkdir ./src/main/resources/static
+    - run: ls -al ./src/main/resources  # 테스트용 출력
     
     - name: 프론트엔드 빌드 후 리소스 이동
       run: cd src/main/frontend | npm run build | cd build |
