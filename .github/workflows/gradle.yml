@@ -50,8 +50,8 @@ jobs:
         cd ./src/main/frontend
         npm install
         npm run build
-        ls -al
-        cp -r ./build/* /home/runner/work/TEAM_2_BE/TEAM_2_BE/src/main/resources/static
+        ls -al ./dist
+        cp -r ./dist/* /home/runner/work/TEAM_2_BE/TEAM_2_BE/src/main/resources/static
     # - run: npm run build
     # - run: ls -al 
     # - run: cd ./build
