@@ -35,7 +35,7 @@ jobs:
         distribution: 'temurin'
 
     - name: 프론트엔드 파일 가져오기
-    - run: mkdir ./src/main/frontend
+      run: mkdir ./src/main/frontend
     - uses: actions/checkout@v4
       with:
         path: ./src/main/frontend
@@ -44,7 +44,7 @@ jobs:
     - run: ls -al ./src/main/  # 테스트용 출력
     
     - name: 프론트엔드 빌드 후 리소스 이동
-    - run: cd src/main/frontend | npm run build | cd build |
+      run: cd src/main/frontend | npm run build | cd build |
             cp -r . /src/main/resources/static | cd /
     - run: ls -al ./src/main/resources/static  # 테스트용 출력
 
