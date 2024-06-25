@@ -34,11 +34,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: 프론트엔드 폴더 생서
+    - name: 프론트엔드 폴더 생성
       run: mkdir ./src/main/frontend
     
     - name: 프론트엔드 파일 가져오기
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
       with:
         path: ./src/main/frontend
         repository: LikeLion-KW-TEAM2/TEAM_2_FE
