@@ -44,7 +44,7 @@ jobs:
         repository: LikeLion-KW-TEAM2/TEAM_2_FE
         
     # - run: ls -al ./src/main/frontend
-    # - run: mkdir ./src/main/resources/static
+    - run: mkdir ./src/main/resources/static
     # - run: ls -al ./src/main/resources  # 테스트용 출력
     
     - name: 프론트엔드 빌드 후 리소스 이동
