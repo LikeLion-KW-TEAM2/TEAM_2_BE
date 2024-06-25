@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -33,17 +33,19 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
-    - name: 프론트엔드 파일 가져오기
+    
+    - name: 프론트엔드 폴더 생서
       run: mkdir ./src/main/frontend
+    
+    - name: 프론트엔드 파일 가져오기
     - uses: actions/checkout@v4
       with:
         path: ./src/main/frontend
         repository: LikeLion-KW-TEAM2/TEAM_2_FE
-        # ref: main
-    - run: ls -al ./src/main/frontend
-    - run: mkdir ./src/main/resources/static
-    - run: ls -al ./src/main/resources  # 테스트용 출력
+        
+    # - run: ls -al ./src/main/frontend
+    # - run: mkdir ./src/main/resources/static
+    # - run: ls -al ./src/main/resources  # 테스트용 출력
     
     - name: 프론트엔드 빌드 후 리소스 이동
       run: |
@@ -52,60 +54,61 @@ jobs:
         npm run build
         ls -al ./dist
         cp -r ./dist/* /home/runner/work/TEAM_2_BE/TEAM_2_BE/src/main/resources/static
-    # - run: npm run build
-    # - run: ls -al 
-    # - run: cd ./build
-    # - run: cp -r . /home/runner/work/TEAM_2_BE/TEAM_2_BE/src/main/resources/static
-    - run: cd /home/runner/work/TEAM_2_BE/TEAM_2_BE/
-    - run: ls -al ./src/main/resources/static  # 테스트용 출력
+        cd /home/runner/work/TEAM_2_BE/TEAM_2_BE/
+    # - run: ls -al ./src/main/resources/static  # 테스트용 출력
 
-    
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
+    
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
-
+      run: ./gradlew clean build
+    
     - name: Make Directory
       run: mkdir -p deploy
         
     # Jar 파일 복사
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
-    - run: ls -al ./deploy  # 테스트용 출력
-
+    # - run: ls -al ./deploy  # 테스트용 출력
+    
+    - name: appspec.yml, deploy.sh 파일 복사
+      run: |
+        cp appspec.yml ./deploy
+        cp ./scripts/*.sh ./deploy
+    
     - name: Make zip file
       run: zip -r ./deploy.zip ./deploy
-
+    
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
-
+        aws-region: $AWS_REGION
+    
     - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./deploy.zip s3://$AWS_S3_BUCKET/
-      
-    # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
-    # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
-    #
-    # - name: Setup Gradle
-    #   uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-    #   with:
-    #     gradle-version: '8.5'
-    #
-    # - name: Build with Gradle 8.5
-    #   run: gradle build
+      run: aws s3 cp --region $AWS_REGION ./deploy.zip s3://$AWS_S3_BUCKET/
+    
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: aws deploy create-deployment
+        --application-name ${{ env.AWS_CODE_DEPLOY_APPLICATION }}
+        --deployment-group-name ${{ env.AWS_CODE_DEPLOY_GROUP }}
+        --file-exists-behavior OVERWRITE
+        --s3-location bucket=${{ env.AWS_S3_BUCKET }},bundleType=zip,key=deploy.zip
+        --region $AWS_REGION
+
 
   dependency-submission:
 
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -113,7 +116,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
+    
     # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
