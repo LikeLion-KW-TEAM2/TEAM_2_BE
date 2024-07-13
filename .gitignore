@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.DS_Store
 
 ### STS ###
 .apt_generated
@@ -17,6 +18,7 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 application.properties
+.DS_Store
 
 ### IntelliJ IDEA ###
 .idea
@@ -27,6 +29,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 application.properties
+.DS_Store
 
 ### NetBeans ###
 /nbproject/private/
@@ -35,7 +38,9 @@ application.properties
 /nbdist/
 /.nb-gradle/
 application.properties
+.DS_Store
 
 ### VS Code ###
 .vscode/
 application.properties
+.DS_Store
