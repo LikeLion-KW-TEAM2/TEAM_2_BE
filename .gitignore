@@ -7,6 +7,8 @@ build/
 .DS_Store
 
 ### STS ###
+.gradle
+build/
 .apt_generated
 .classpath
 .factorypath
@@ -21,6 +23,8 @@ application.properties
 .DS_Store
 
 ### IntelliJ IDEA ###
+.gradle
+build/
 .idea
 *.iws
 *.iml
@@ -32,6 +36,8 @@ application.properties
 .DS_Store
 
 ### NetBeans ###
+.gradle
+build/
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -41,6 +47,8 @@ application.properties
 .DS_Store
 
 ### VS Code ###
+.gradle
+build/
 .vscode/
 application.properties
 .DS_Store
