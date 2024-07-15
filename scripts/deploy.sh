@@ -22,4 +22,11 @@ echo "> $JAR_NAME 에 실행권한 추가"
 chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
-nohup java -jar -Duser.timezone=Asia/Seoul $JAR_NAME &
+
+# nohup.out을 REPOSITORY 디렉토리에 저장하도록 경로 변경
+nohup java -jar -Duser.timezone=Asia/Seoul $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+
+# STDOUT 닫기
+exec 1>&-
+
+echo "배포 스크립트 완료"
