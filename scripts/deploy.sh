@@ -28,5 +28,3 @@ nohup java -jar -Duser.timezone=Asia/Seoul $JAR_NAME > $REPOSITORY/nohup.out 2>&
 
 # STDOUT 닫기
 exec 1>&-
-
-echo "배포 스크립트 완료"
