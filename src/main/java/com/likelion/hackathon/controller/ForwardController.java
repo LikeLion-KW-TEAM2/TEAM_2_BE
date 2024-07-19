@@ -1,13 +1,13 @@
-package com.likelion.hackathon.controller;
+// package com.likelion.hackathon.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.stereotype.Controller;
+// import org.springframework.web.bind.annotation.GetMapping;
 
 
-@Controller
-public class ForwardController {
-    @GetMapping(value = { "", "/login", "/signup"})
-    public String forward() {
-        return "forward:/index.html";
-    }
-}
+// @Controller
+// public class ForwardController {
+//     @GetMapping(value = { "", "/login", "/signup"})
+//     public String forward() {
+//         return "forward:/index.html";
+//     }
+// }
