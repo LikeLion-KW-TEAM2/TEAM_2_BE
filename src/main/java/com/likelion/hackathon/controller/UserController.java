@@ -3,12 +3,12 @@ package com.likelion.hackathon.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.hackathon.domain.User;
-import com.likelion.hackathon.dto.request.EditImageRequest;
-import com.likelion.hackathon.dto.request.EditPasswordRequest;
-import com.likelion.hackathon.dto.request.EditinfoRequest;
-import com.likelion.hackathon.dto.request.IdValidateRequest;
-import com.likelion.hackathon.dto.request.SignupRequest;
-import com.likelion.hackathon.dto.response.MypageProfileResponse;
+import com.likelion.hackathon.dto.request.user.EditImageRequest;
+import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
+import com.likelion.hackathon.dto.request.user.EditinfoRequest;
+import com.likelion.hackathon.dto.request.user.IdValidateRequest;
+import com.likelion.hackathon.dto.request.user.SignupRequest;
+import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.service.UserService;
 
 import lombok.RequiredArgsConstructor;

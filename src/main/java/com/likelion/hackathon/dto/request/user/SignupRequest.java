@@ -1,4 +1,4 @@
-package com.likelion.hackathon.dto.request;
+package com.likelion.hackathon.dto.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IdValidateRequest {
+public class SignupRequest {
     private String userId;
+    private String password;
+    private String name;
+    private int agree;
 }

@@ -1,4 +1,4 @@
-package com.likelion.hackathon.dto.response;
+package com.likelion.hackathon.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
