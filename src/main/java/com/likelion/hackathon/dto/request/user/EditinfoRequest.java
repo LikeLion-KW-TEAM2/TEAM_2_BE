@@ -1,4 +1,4 @@
-package com.likelion.hackathon.dto.request;
+package com.likelion.hackathon.dto.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRequest {
-    private String userId;
-    private String password;
+public class EditinfoRequest {
     private String name;
-    private int agree;
+    private String myImage;
 }
+

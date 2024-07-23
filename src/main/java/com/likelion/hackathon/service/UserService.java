@@ -7,11 +7,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.likelion.hackathon.domain.User;
-import com.likelion.hackathon.dto.request.EditPasswordRequest;
-import com.likelion.hackathon.dto.request.EditinfoRequest;
-import com.likelion.hackathon.dto.request.IdValidateRequest;
-import com.likelion.hackathon.dto.request.SignupRequest;
-import com.likelion.hackathon.dto.response.MypageProfileResponse;
+import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
+import com.likelion.hackathon.dto.request.user.EditinfoRequest;
+import com.likelion.hackathon.dto.request.user.IdValidateRequest;
+import com.likelion.hackathon.dto.request.user.SignupRequest;
+import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
