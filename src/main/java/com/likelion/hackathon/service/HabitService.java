@@ -84,6 +84,7 @@ public class HabitService {
                 .build());
     }
 
+    // 습관 수정 페이지 호출 시 기존 습관 정보 반환
     public EditHabitPageResponse getHabitById(String userId, int habitId) {
         Habit habit = habitRepository.findByUserIdAndId(userId, habitId);
         // int dDay = 
@@ -92,6 +93,7 @@ public class HabitService {
                 dDay);
     }
 
+    // 습관 정보 수정
     public Habit editHabit(String userId, int habitId, EditHabitRequest dto) {
         Habit habit = habitRepository.findByUserIdAndId(userId, habitId);
         habit.setName(dto.getName());
@@ -101,11 +103,13 @@ public class HabitService {
         return habit;
     }
 
+    // 습관 정보와 기록 삭제
     public void deleteHabit(int habitId) {
         historyRepository.deleteAllByHabitId(habitId);
         habitRepository.deleteById(habitId);
     }
 
+    // 습관 여부 체크
     public void checkHabit(String userId, int habitId, CheckHabitRequest dto) {
         habitRepository.findByUserIdAndId(userId, habitId);
         History history = historyRepository.findByHabitIdAndDate(habitId, dto.getDate());
