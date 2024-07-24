@@ -39,7 +39,7 @@ public class HabitController {
     public ResponseEntity getMainpageInfo() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MainPageHabit> result = habitService.getTodayHabits(userId);
-        if (result == null) {
+        if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("습관 정보가 없습니다.");
         }
         User user = (User) userService.loadUserByUsername(userId);
@@ -51,7 +51,7 @@ public class HabitController {
     public ResponseEntity getHabitsByDate(@PathVariable LocalDate date) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MainPageHabit> result = habitService.getHabitsByDate(userId, date);
-        if (result == null) {
+        if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("습관 정보가 없습니다.");
         }
         User user = (User) userService.loadUserByUsername(userId);
