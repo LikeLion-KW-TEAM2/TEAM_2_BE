@@ -46,7 +46,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
 
         // 토큰 발급 후 응답 해더에 추가
-        String token = jwtUtil.createJwt(user.getUserId(), iterator.next().getAuthority(), 10 * 60 * 1000L); // 10분
+        String token = jwtUtil.createJwt(user.getUserId(), iterator.next().getAuthority(), 600 * 600 * 1000L); // 100시간
         response.addHeader("Authorization", "Bearer " + token);
 
         System.out.println(authentication);

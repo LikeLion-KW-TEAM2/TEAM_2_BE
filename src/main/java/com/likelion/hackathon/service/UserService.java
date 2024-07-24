@@ -7,8 +7,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.likelion.hackathon.domain.User;
-import com.likelion.hackathon.dto.request.IdValidateRequest;
-import com.likelion.hackathon.dto.request.SignupRequest;
+import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
+import com.likelion.hackathon.dto.request.user.EditinfoRequest;
+import com.likelion.hackathon.dto.request.user.IdValidateRequest;
+import com.likelion.hackathon.dto.request.user.SignupRequest;
+import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,6 +23,11 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements UserDetailsService{
     private final UserRepository repository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        return repository.findByUserId(userId);
+    }
 
     public void signup(SignupRequest dto) {
         repository.save(User.builder()
@@ -37,8 +45,16 @@ public class UserService implements UserDetailsService{
         return repository.existsByUserId(dto.getUserId());
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        return repository.findByUserId(userId);
+    public MypageProfileResponse editInfo(String userId, EditinfoRequest dto){
+        User user = (User) loadUserByUsername(userId);
+        user.setName(dto.getName());
+        user.setImage(dto.getMyImage());
+        return new MypageProfileResponse(user.getName(), user.getImage());
     }
+
+    public void editPassword(String userId, EditPasswordRequest dto) {
+        User user = (User) loadUserByUsername(userId);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
 }
