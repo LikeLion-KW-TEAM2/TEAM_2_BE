@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
@@ -61,8 +62,12 @@ public class UserController {
     }
 
     @PostMapping("/mypage/edit")
-    public ResponseEntity<MypageProfileResponse> editInfo(@RequestBody EditinfoRequest dto) {
+    public ResponseEntity editInfo(@RequestBody EditinfoRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) service.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         return ResponseEntity.ok(service.editInfo(userId, dto));
     }
 
@@ -82,5 +87,16 @@ public class UserController {
         }
         service.editPassword(userId, dto);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
+    @DeleteMapping("/mypage/remove")
+    public ResponseEntity<String> removeUser() {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) service.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
+        service.removeUser(userId);
+        return ResponseEntity.ok("탈퇴가 완료되었습니다.");
     }
 }

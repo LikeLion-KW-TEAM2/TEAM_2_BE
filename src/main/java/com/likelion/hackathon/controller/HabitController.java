@@ -50,17 +50,24 @@ public class HabitController {
     @GetMapping("/home/{date}")
     public ResponseEntity getHabitsByDate(@PathVariable LocalDate date) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         List<MainPageHabit> result = habitService.getHabitsByDate(userId, date);
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("습관 정보가 없습니다.");
         }
-        User user = (User) userService.loadUserByUsername(userId);
         return ResponseEntity.ok(new MainPageResponse(user.getImage(), result));
     }
     
     @PostMapping("/home/habit/create")
     public ResponseEntity createHabit(@RequestBody CreateHabitRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         habitService.createHabit(userId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("습관이 추가되었습니다.");
     }
@@ -68,6 +75,10 @@ public class HabitController {
     @GetMapping("/home/habit/{habitId}")
     public ResponseEntity getEditHabitPage(@PathVariable int habitId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         EditHabitPageResponse result = habitService.getHabitById(userId, habitId);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("습관 정보가 없습니다.");
@@ -78,6 +89,10 @@ public class HabitController {
     @PutMapping("/home/habit/change/{habitId}")
     public ResponseEntity putMethodName(@PathVariable int habitId, @RequestBody EditHabitRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         Habit result = habitService.editHabit(userId, habitId, dto);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("오류가 발생하였습니다.");
@@ -88,6 +103,10 @@ public class HabitController {
     @DeleteMapping("/home/habit/delete/{habitId}")
     public ResponseEntity deleteHabit(@PathVariable int habitId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         habitService.deleteHabit(habitId);
         return ResponseEntity.ok("습관이 성공적으로 삭제되었습니다.");
     }
@@ -95,6 +114,10 @@ public class HabitController {
     @PutMapping("home/habit/check/{habitId}")
     public ResponseEntity putMethodName(@PathVariable int habitId, @RequestBody CheckHabitRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
         habitService.checkHabit(userId, habitId, dto);
         return ResponseEntity.ok("습관 체크 성공");
     }
