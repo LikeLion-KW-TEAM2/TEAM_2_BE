@@ -1,4 +1,4 @@
-package com.likelion.hackathon.dto.response.friend;
+package com.likelion.hackathon.dto.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendListElement {
-    private String userId;
+public class IcecreamResponse {
     private String name;
-    private String iamge;
-    private int count;
+    private String myImage;
+    private int icecream;
 }
