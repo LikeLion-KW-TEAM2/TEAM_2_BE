@@ -10,4 +10,6 @@ public interface GuestbookRepository extends JpaRepository<Guestbook, Integer>{
     List<Guestbook> findAllByUserIdOrderByCreatedAtDesc(String userId);
 
     void deleteByuserIdAndId(String userId, int id);
+
+    void deleteAllByUserId(String userId);
 }
