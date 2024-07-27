@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.likelion.hackathon.domain.Friend;
 import com.likelion.hackathon.domain.Habit;
+import com.likelion.hackathon.domain.History;
 import com.likelion.hackathon.domain.User;
 import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
 import com.likelion.hackathon.dto.request.user.EditinfoRequest;
@@ -18,6 +19,7 @@ import com.likelion.hackathon.dto.request.user.IdValidateRequest;
 import com.likelion.hackathon.dto.request.user.SignupRequest;
 import com.likelion.hackathon.dto.response.friend.FriendListElement;
 import com.likelion.hackathon.dto.response.friend.FriendListResponse;
+import com.likelion.hackathon.dto.response.user.DoneHabitResponse;
 import com.likelion.hackathon.dto.response.user.IcecreamResponse;
 import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.repository.FriendRepository;
@@ -104,7 +106,13 @@ public class UserService implements UserDetailsService{
         friendRepository.deleteByUserIdAndFriendId(userId, friendId);
     }
     
-    public void getDoneHabits(String userId) {
+    public List<DoneHabitResponse> getDoneHabits(String userId) {
         List<Habit> habits = habitRepository.findAllByUserIdAndOvercome(userId, 1);
+        List<DoneHabitResponse> result = new ArrayList<>();
+        for (Habit habit : habits) {
+            History lastHistory = historyRepository.findByHabitIdAndStatusOrderByDateDesc(habit.getId(), 2).get(0);
+            result.add(new DoneHabitResponse(habit.getName(), habit.getCreatedAt(), lastHistory.getDate()));
+        }
+        return result;
     }
 }

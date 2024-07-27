@@ -29,7 +29,7 @@ public class History {
     @Column(name = "date")
     private LocalDate date;
     
-    // 체크 안 됨(못 지킴) : 0, 체크(지킴) : 1
+    // 체크 안 됨(못 지킴) : 0, 체크(지킴) : 1, 극복함 : 2
     @Column(name = "status")
     private int status;
 }

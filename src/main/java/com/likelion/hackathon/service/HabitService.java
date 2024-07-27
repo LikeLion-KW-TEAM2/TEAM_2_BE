@@ -100,6 +100,12 @@ public class HabitService {
         habit.setPeriodType(dto.getPeriodType());
         habit.setPrivacy(dto.getPrivacy());
         habit.setOvercome(dto.getOvercome());
+        if (dto.getOvercome() == 1) {
+            historyRepository.save(History.builder()
+                    .habitId(habitId)
+                    .date(LocalDate.now())
+                    .status(2).build());
+        }
         return habit;
     }
 
