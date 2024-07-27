@@ -9,6 +9,7 @@ import com.likelion.hackathon.dto.request.user.EditinfoRequest;
 import com.likelion.hackathon.dto.request.user.IdValidateRequest;
 import com.likelion.hackathon.dto.request.user.SignupRequest;
 import com.likelion.hackathon.dto.response.friend.FriendListElement;
+import com.likelion.hackathon.dto.response.user.DoneHabitResponse;
 import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.service.UserService;
 
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/icecream")
-    public ResponseEntity getMethodName() {
+    public ResponseEntity getIcecream() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
@@ -137,14 +138,17 @@ public class UserController {
         return ResponseEntity.ok("삭제가 완료되었습니다.");
     }
     
-    // @GetMapping("/mypage/donehabits")
-    // public String getDoneHabits() {
-    //     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-    //     User user = (User) userService.loadUserByUsername(userId);
-    //     if (user == null) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
-    //     }
-    //     return new String();
-    // }
-    
+    @GetMapping("/mypage/donehabits")
+    public ResponseEntity getDoneHabits() {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
+        List<DoneHabitResponse> result = userService.getDoneHabits(userId);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("극복한 습관이 없습니다.");
+        }
+        return ResponseEntity.ok(result);
+    }
 }

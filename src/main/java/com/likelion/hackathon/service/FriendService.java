@@ -1,7 +1,10 @@
 package com.likelion.hackathon.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -45,10 +48,16 @@ public class FriendService {
 
     public List<FriendSearchElement> friendSearch(String id, String userId) {
         List<User> users = userRepository.findByUserIdContainingOrderByUserIdAsc(id);
+        List<Friend> friends = friendRepository.findAllByUserId(userId);
+        Set<String> friendIds = friends.stream()
+                                   .map(Friend::getFriendId)
+                                   .collect(Collectors.toSet());
         List<FriendSearchElement> result = new ArrayList<>();
         for (User user : users) {
-            if (!user.getUserId().equals(userId))
-                result.add(new FriendSearchElement(user.getUserId(), user.getName(), user.getImage()));
+            if (!user.getUserId().equals(userId)) {
+                int isFriend = friendIds.contains(user.getUserId()) ? 1 : 0;
+                result.add(new FriendSearchElement(user.getUserId(), user.getName(), user.getImage(), isFriend));
+            }
         }
         return result;
     }
@@ -70,7 +79,9 @@ public class FriendService {
         List<Habit> habits = habitRepository.findAllByUserIdAndOvercome(userId, 0);
         List<String> elements = new ArrayList<>();
         for (Habit habit : habits) {
-            elements.add(habit.getName());
+            if (habit.getPrivacy() == 0) {
+                elements.add(habit.getName());
+            }
         }
         return new FriendIcecreamResponse(user.getName(), user.getIcecream(), elements);
     }
