@@ -1,6 +1,7 @@
 package com.likelion.hackathon.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.likelion.hackathon.domain.User;
 import com.likelion.hackathon.dto.request.user.EditImageRequest;
@@ -88,12 +89,15 @@ public class UserController {
         return ResponseEntity.ok(userService.editInfo(userId, dto));
     }
 
-    // @PostMapping("/mypage/edit/image")
-    // public ResponseEntity editImage(@RequestBody EditImageRequest dto) {
-    //     // TODO: process POST request
-
-    //     return ResponseEntity.ok();
-    // }
+    @PostMapping("/mypage/edit/image")
+    public ResponseEntity editImage(@RequestParam("image") MultipartFile image) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+        }
+        return ResponseEntity.ok(userService.EditImage(userId, image));
+    }
 
     @PostMapping("/mypage/edit/password")
     public ResponseEntity<String> editPassword(@RequestBody EditPasswordRequest dto) {

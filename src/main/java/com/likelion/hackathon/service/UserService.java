@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.likelion.hackathon.domain.Friend;
 import com.likelion.hackathon.domain.Habit;
@@ -18,7 +19,6 @@ import com.likelion.hackathon.dto.request.user.EditinfoRequest;
 import com.likelion.hackathon.dto.request.user.IdValidateRequest;
 import com.likelion.hackathon.dto.request.user.SignupRequest;
 import com.likelion.hackathon.dto.response.friend.FriendListElement;
-import com.likelion.hackathon.dto.response.friend.FriendListResponse;
 import com.likelion.hackathon.dto.response.user.DoneHabitResponse;
 import com.likelion.hackathon.dto.response.user.IcecreamResponse;
 import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
@@ -27,6 +27,7 @@ import com.likelion.hackathon.repository.GuestbookRepository;
 import com.likelion.hackathon.repository.HabitRepository;
 import com.likelion.hackathon.repository.HistoryRepository;
 import com.likelion.hackathon.repository.UserRepository;
+import com.likelion.hackathon.service.util.S3Uploader;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class UserService implements UserDetailsService{
     private final FriendRepository friendRepository;
     private final GuestbookRepository guestbookRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final S3Uploader uploader;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -95,7 +97,6 @@ public class UserService implements UserDetailsService{
         List<Friend> friends = friendRepository.findAllByUserId(userId);
         List<FriendListElement> result = new ArrayList<>();
         for (Friend friend : friends) {
-            // habitRepository.countByUserId(userId).intValue();
             result.add(new FriendListElement(friend.getFriendId(), friend.getName(), friend.getImage(),
                     habitRepository.countByUserId(friend.getFriendId()).intValue()));
         }
@@ -114,5 +115,12 @@ public class UserService implements UserDetailsService{
             result.add(new DoneHabitResponse(habit.getName(), habit.getCreatedAt(), lastHistory.getDate()));
         }
         return result;
+    }
+
+    public MypageProfileResponse EditImage(String userId, MultipartFile image) {
+        User user = userRepository.findByUserId(userId);
+        String imageUrl = uploader.upload(image, userId);
+        user.setImage(imageUrl);
+        return new MypageProfileResponse(user.getName(), user.getImage());
     }
 }
