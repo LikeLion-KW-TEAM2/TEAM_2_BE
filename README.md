@@ -8,17 +8,21 @@
 
 ## Member
 
-|  name  |           role            |
-| :----: | :-----------------------: |
-| 김동균 |  디자인, 프론트엔드 개발  |
-| 김동윤 |        백엔드 개발        |
-| 김서경 |        백엔드 개발        |
-| 박경민 | 백엔드 개발, DB설계, 배포 |
+|                    name                    |           role            |
+| :----------------------------------------: | :-----------------------: |
+| [김동균](https://github.com/KimDongGyun23) |  디자인, 프론트엔드 개발  |
+|  [김동윤](https://github.com/yoonie1219)   |        백엔드 개발        |
+|   [김서경](https://github.com/malangkim)   |        백엔드 개발        |
+|  [박경민](https://github.com/Kyoung-M1N)   | 백엔드 개발, DB설계, 배포 |
 
 ## Environment
 
 - 프론트엔드
-  - 
+  - TypeScript
+  - React
+  - Axios
+  - Figma
+  - Vercel
 
 - 백엔드
   - Java 17
@@ -26,6 +30,7 @@
   - Spring Data JPA
   - MySQL
   - AWS EC2, S3 bucket, Code Deploy
+  - NGINX
   - Github Actions
 
 ## Figma
@@ -37,4 +42,8 @@
 
 
 ## CI/CD
+
+
+
+## Service Architecture
 
