@@ -14,6 +14,7 @@ import com.likelion.hackathon.domain.Friend;
 import com.likelion.hackathon.domain.Habit;
 import com.likelion.hackathon.domain.History;
 import com.likelion.hackathon.domain.User;
+import com.likelion.hackathon.dto.request.user.EditDefaultImageRequest;
 import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
 import com.likelion.hackathon.dto.request.user.EditinfoRequest;
 import com.likelion.hackathon.dto.request.user.IdValidateRequest;
@@ -27,6 +28,7 @@ import com.likelion.hackathon.repository.GuestbookRepository;
 import com.likelion.hackathon.repository.HabitRepository;
 import com.likelion.hackathon.repository.HistoryRepository;
 import com.likelion.hackathon.repository.UserRepository;
+import com.likelion.hackathon.service.util.IcecreamScore;
 import com.likelion.hackathon.service.util.S3Uploader;
 
 import jakarta.transaction.Transactional;
@@ -42,6 +44,7 @@ public class UserService implements UserDetailsService{
     private final FriendRepository friendRepository;
     private final GuestbookRepository guestbookRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final IcecreamScore icecreamScore;
     private final S3Uploader uploader;
 
     @Override
@@ -67,13 +70,27 @@ public class UserService implements UserDetailsService{
 
     public IcecreamResponse getIcecream(String userId) {
         User user = userRepository.findByUserId(userId);
+        user.setIcecream(icecreamScore.calculateIcecreamScore(userId));
         return new IcecreamResponse(user.getName(), user.getImage(), user.getIcecream());
     }
 
-    public MypageProfileResponse editInfo(String userId, EditinfoRequest dto){
+    public MypageProfileResponse editInfo(String userId, EditinfoRequest dto) {
         User user = (User) loadUserByUsername(userId);
         user.setName(dto.getName());
         user.setImage(dto.getMyImage());
+        return new MypageProfileResponse(user.getName(), user.getImage());
+    }
+    
+    public MypageProfileResponse editImage(String userId, MultipartFile image) {
+        User user = userRepository.findByUserId(userId);
+        String imageUrl = uploader.upload(image, userId);
+        user.setImage(imageUrl);
+        return new MypageProfileResponse(user.getName(), user.getImage());
+    }
+
+    public MypageProfileResponse editDefaultImage(String userId, EditDefaultImageRequest dto) {
+        User user = userRepository.findByUserId(userId);
+        user.setImage("default");
         return new MypageProfileResponse(user.getName(), user.getImage());
     }
 
@@ -115,12 +132,5 @@ public class UserService implements UserDetailsService{
             result.add(new DoneHabitResponse(habit.getName(), habit.getCreatedAt(), lastHistory.getDate()));
         }
         return result;
-    }
-
-    public MypageProfileResponse EditImage(String userId, MultipartFile image) {
-        User user = userRepository.findByUserId(userId);
-        String imageUrl = uploader.upload(image, userId);
-        user.setImage(imageUrl);
-        return new MypageProfileResponse(user.getName(), user.getImage());
     }
 }

@@ -39,10 +39,14 @@ public class HabitController {
     public ResponseEntity getMainpageInfo() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         List<MainPageHabit> result = habitService.getTodayHabits(userId);
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
+        }
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("습관 정보가 없습니다.");
         }
-        User user = (User) userService.loadUserByUsername(userId);
+        // User user = (User) userService.loadUserByUsername(userId);
         return ResponseEntity.ok(new MainPageResponse(user.getImage(), result));
         // return new String();
     }
@@ -52,7 +56,7 @@ public class HabitController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         List<MainPageHabit> result = habitService.getHabitsByDate(userId, date);
         if (result.isEmpty()) {
@@ -66,7 +70,7 @@ public class HabitController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         habitService.createHabit(userId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("습관이 추가되었습니다.");
@@ -77,7 +81,7 @@ public class HabitController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         EditHabitPageResponse result = habitService.getHabitById(userId, habitId);
         if (result == null) {
@@ -91,7 +95,7 @@ public class HabitController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         Habit result = habitService.editHabit(userId, habitId, dto);
         if (result == null) {
@@ -105,7 +109,7 @@ public class HabitController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         habitService.deleteHabit(habitId);
         return ResponseEntity.ok("습관이 성공적으로 삭제되었습니다.");
@@ -116,7 +120,7 @@ public class HabitController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         habitService.checkHabit(userId, habitId, dto);
         return ResponseEntity.ok("습관 체크 성공");

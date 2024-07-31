@@ -42,6 +42,7 @@ public class User implements UserDetails{
     @Column(name = "name")
     private String name;
 
+    //0~1점 미만 : 0, 1~20 : 1, 21~40 : 2, 41~60 : 3, 61~80 : 4, 81~100 : 5
     @Column(name = "icecream")
     private int icecream;
 
