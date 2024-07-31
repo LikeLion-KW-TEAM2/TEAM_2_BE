@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.likelion.hackathon.domain.User;
+import com.likelion.hackathon.dto.request.user.EditDefaultImageRequest;
 import com.likelion.hackathon.dto.request.user.EditImageRequest;
 import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
 import com.likelion.hackathon.dto.request.user.EditinfoRequest;
@@ -54,7 +55,7 @@ public class UserController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(userService.getIcecream(userId));
     }
@@ -84,7 +85,7 @@ public class UserController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(userService.editInfo(userId, dto));
     }
@@ -94,17 +95,28 @@ public class UserController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
-        return ResponseEntity.ok(userService.EditImage(userId, image));
+        return ResponseEntity.ok(userService.editImage(userId, image));
     }
 
+    @PostMapping("/mypage/edit/defaultimage")
+    public ResponseEntity postMethodName(@RequestBody EditDefaultImageRequest dto) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userService.loadUserByUsername(userId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
+        }
+        
+        return ResponseEntity.ok(userService.editDefaultImage(userId, dto));
+    }
+    
     @PostMapping("/mypage/edit/password")
     public ResponseEntity<String> editPassword(@RequestBody EditPasswordRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         userService.editPassword(userId, dto);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
@@ -115,7 +127,7 @@ public class UserController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         userService.removeUser(userId);
         return ResponseEntity.ok("탈퇴가 완료되었습니다.");

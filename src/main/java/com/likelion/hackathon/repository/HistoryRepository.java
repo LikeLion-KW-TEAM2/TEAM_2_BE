@@ -15,4 +15,6 @@ public interface HistoryRepository extends JpaRepository<History, Integer>{
     List<History> findByHabitIdAndStatusOrderByDateDesc(int habitId, int status);
 
     void deleteAllByHabitId(int habitId);
+    
+    List<History> findAllByHabitIdAndStatusAndDateAfter(int habitId, int status, LocalDate date);
 }

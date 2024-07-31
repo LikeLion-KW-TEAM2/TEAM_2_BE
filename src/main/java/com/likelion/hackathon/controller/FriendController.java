@@ -35,7 +35,7 @@ public class FriendController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(friendService.getFriendList(userId));
     }
@@ -45,7 +45,7 @@ public class FriendController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         friendService.createFriend(userId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("친구 추가가 완료되었습니다.");
@@ -56,7 +56,7 @@ public class FriendController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         List<FriendSearchElement> result = friendService.friendSearch(id, userId);
         if (result.isEmpty()) {
@@ -70,7 +70,7 @@ public class FriendController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(friendService.getFriendIcecream(id));
     }
@@ -80,7 +80,7 @@ public class FriendController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         friendService.createGuestbook(user.getName(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("방명록 작성이 완료되었습니다.");

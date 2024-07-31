@@ -29,13 +29,9 @@ public class GuestbookController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
-        GuestbookListResponse result = guestbookService.getGuestbookList(user);
-        if (result.getGuestbooks().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("방명록이 존재하지 않습니다.");
-        }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(guestbookService.getGuestbookList(user));
     }
     
     @DeleteMapping("/guestbook/delete/{id}")
@@ -43,7 +39,7 @@ public class GuestbookController {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         guestbookService.deleteGuestbook(userId, id);
         return ResponseEntity.ok("방명록이 삭제되었습니다.");

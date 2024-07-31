@@ -22,6 +22,7 @@ import com.likelion.hackathon.repository.FriendRepository;
 import com.likelion.hackathon.repository.GuestbookRepository;
 import com.likelion.hackathon.repository.HabitRepository;
 import com.likelion.hackathon.repository.UserRepository;
+import com.likelion.hackathon.service.util.IcecreamScore;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class FriendService {
     private final HabitRepository habitRepository;
     private final UserRepository userRepository;
     private final GuestbookRepository guestbookRepository;
+    private final IcecreamScore icecreamScore;
 
     public FriendListResponse getFriendList(String userId) {
         List<Friend> friends = friendRepository.findAllByUserId(userId);
@@ -83,6 +85,7 @@ public class FriendService {
                 elements.add(habit.getName());
             }
         }
+        user.setIcecream(icecreamScore.calculateIcecreamScore(userId));
         return new FriendIcecreamResponse(user.getName(), user.getIcecream(), elements);
     }
     
