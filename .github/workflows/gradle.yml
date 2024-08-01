@@ -34,27 +34,34 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: 프론트엔드 폴더 생성
-      run: mkdir ./src/main/frontend
-    
-    - name: 프론트엔드 파일 가져오기
-      uses: actions/checkout@v4
-      with:
-        path: ./src/main/frontend
-        repository: LikeLion-KW-TEAM2/TEAM_2_FE
-        
-    # - run: ls -al ./src/main/frontend
-    - run: mkdir ./src/main/resources/static
-    # - run: ls -al ./src/main/resources  # 테스트용 출력
-    
-    - name: 프론트엔드 빌드 후 리소스 이동
+    - name: application.properties 작성
       run: |
-        cd ./src/main/frontend
-        npm install
-        npm run build
-        ls -al ./dist
-        cp -r ./dist/* /home/runner/work/TEAM_2_BE/TEAM_2_BE/src/main/resources/static
-        cd /home/runner/work/TEAM_2_BE/TEAM_2_BE/
+        mkdir ./src/main/resources
+        touch ./src/main/resources/application.properties
+        echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+        cat ./src/main/resources/application.properties
+
+    # - name: 프론트엔드 폴더 생성
+    #   run: mkdir ./src/main/frontend
+    
+    # - name: 프론트엔드 파일 가져오기
+    #   uses: actions/checkout@v4
+    #   with:
+    #     path: ./src/main/frontend
+    #     repository: LikeLion-KW-TEAM2/TEAM_2_FE
+        
+    # # - run: ls -al ./src/main/frontend
+    # - run: mkdir ./src/main/resources/static
+    # # - run: ls -al ./src/main/resources  # 테스트용 출력
+    
+    # - name: 프론트엔드 빌드 후 리소스 이동
+    #   run: |
+    #     cd ./src/main/frontend
+    #     npm install
+    #     npm run build
+    #     ls -al ./dist
+    #     cp -r ./dist/* /home/runner/work/TEAM_2_BE/TEAM_2_BE/src/main/resources/static
+    #     cd /home/runner/work/TEAM_2_BE/TEAM_2_BE/
     # - run: ls -al ./src/main/resources/static  # 테스트용 출력
 
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
