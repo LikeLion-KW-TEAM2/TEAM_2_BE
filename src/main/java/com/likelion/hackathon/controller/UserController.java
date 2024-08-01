@@ -80,24 +80,24 @@ public class UserController {
         return ResponseEntity.ok(new MypageProfileResponse(user.getName(), user.getImage()));
     }
 
-    @PostMapping("/mypage/edit")
-    public ResponseEntity editInfo(@RequestBody EditinfoRequest dto) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
-        }
-        return ResponseEntity.ok(userService.editInfo(userId, dto));
-    }
+    // @PostMapping("/mypage/edit")
+    // public ResponseEntity editInfo(@RequestBody EditinfoRequest dto) {
+    //     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+    //     User user = (User) userService.loadUserByUsername(userId);
+    //     if (user == null) {
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
+    //     }
+    //     return ResponseEntity.ok(userService.editInfo(userId, dto));
+    // }
 
     @PostMapping("/mypage/edit/image")
-    public ResponseEntity editImage(@RequestParam("image") MultipartFile image) {
+    public ResponseEntity editImage(@RequestParam("image") MultipartFile image, @RequestParam("name") String name) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
-        return ResponseEntity.ok(userService.editImage(userId, image));
+        return ResponseEntity.ok(userService.editImage(userId, image, name));
     }
 
     @PostMapping("/mypage/edit/defaultimage")
