@@ -3,7 +3,6 @@ package com.likelion.hackathon.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likelion.hackathon.domain.User;
-import com.likelion.hackathon.dto.response.guestbook.GuestbookListResponse;
 import com.likelion.hackathon.service.GuestbookService;
 import com.likelion.hackathon.service.UserService;
 
@@ -25,7 +24,7 @@ public class GuestbookController {
     private final GuestbookService guestbookService;
 
     @GetMapping("/guestbook")
-    public ResponseEntity getMethodName() {
+    public ResponseEntity getGuestbook() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
@@ -35,10 +34,9 @@ public class GuestbookController {
     }
     
     @DeleteMapping("/guestbook/delete/{id}")
-    public ResponseEntity deleteGuestbook(@PathVariable int id) {
+    public ResponseEntity<String> deleteGuestbook(@PathVariable int id) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         guestbookService.deleteGuestbook(userId, id);

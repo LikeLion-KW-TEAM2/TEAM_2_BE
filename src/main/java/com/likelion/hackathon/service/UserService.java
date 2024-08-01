@@ -3,6 +3,8 @@ package com.likelion.hackathon.service;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +18,6 @@ import com.likelion.hackathon.domain.History;
 import com.likelion.hackathon.domain.User;
 import com.likelion.hackathon.dto.request.user.EditDefaultImageRequest;
 import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
-import com.likelion.hackathon.dto.request.user.EditinfoRequest;
 import com.likelion.hackathon.dto.request.user.IdValidateRequest;
 import com.likelion.hackathon.dto.request.user.SignupRequest;
 import com.likelion.hackathon.dto.response.friend.FriendListElement;
@@ -52,6 +53,14 @@ public class UserService implements UserDetailsService{
         return userRepository.findByUserId(userId);
     }
 
+    public boolean isValidUser(String userId) {
+        User user = (User) loadUserByUsername(userId);
+        if (user == null) {
+            return false;
+        }
+        return true;
+    }
+
     public void signup(SignupRequest dto) {
         userRepository.save(User.builder()
                 .userId(dto.getUserId())
@@ -73,13 +82,6 @@ public class UserService implements UserDetailsService{
         user.setIcecream(icecreamScore.calculateIcecreamScore(userId));
         return new IcecreamResponse(user.getName(), user.getImage(), user.getIcecream());
     }
-
-    // public MypageProfileResponse editInfo(String userId, EditinfoRequest dto) {
-    //     User user = (User) loadUserByUsername(userId);
-    //     user.setName(dto.getName());
-    //     user.setImage(dto.getMyImage());
-    //     return new MypageProfileResponse(user.getName(), user.getImage());
-    // }
     
     public MypageProfileResponse editImage(String userId, MultipartFile image, String name) {
         User user = userRepository.findByUserId(userId);
