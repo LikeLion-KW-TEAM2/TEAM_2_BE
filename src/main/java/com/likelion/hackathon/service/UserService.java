@@ -74,15 +74,16 @@ public class UserService implements UserDetailsService{
         return new IcecreamResponse(user.getName(), user.getImage(), user.getIcecream());
     }
 
-    public MypageProfileResponse editInfo(String userId, EditinfoRequest dto) {
-        User user = (User) loadUserByUsername(userId);
-        user.setName(dto.getName());
-        user.setImage(dto.getMyImage());
-        return new MypageProfileResponse(user.getName(), user.getImage());
-    }
+    // public MypageProfileResponse editInfo(String userId, EditinfoRequest dto) {
+    //     User user = (User) loadUserByUsername(userId);
+    //     user.setName(dto.getName());
+    //     user.setImage(dto.getMyImage());
+    //     return new MypageProfileResponse(user.getName(), user.getImage());
+    // }
     
-    public MypageProfileResponse editImage(String userId, MultipartFile image) {
+    public MypageProfileResponse editImage(String userId, MultipartFile image, String name) {
         User user = userRepository.findByUserId(userId);
+        user.setName(name);
         String imageUrl = uploader.upload(image, userId);
         user.setImage(imageUrl);
         return new MypageProfileResponse(user.getName(), user.getImage());
@@ -90,6 +91,7 @@ public class UserService implements UserDetailsService{
 
     public MypageProfileResponse editDefaultImage(String userId, EditDefaultImageRequest dto) {
         User user = userRepository.findByUserId(userId);
+        user.setName(dto.getName());
         user.setImage("default");
         return new MypageProfileResponse(user.getName(), user.getImage());
     }

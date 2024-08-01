@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditImageRequest {
+    private String name;
     private MultipartFile image;
 }

@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditDefaultImageRequest {
-    String image;
+    private String name;
+    private String image;
 }
