@@ -23,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,17 +37,15 @@ public class HabitController {
     @GetMapping("/home")
     public ResponseEntity getMainpageInfo() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<MainPageHabit> result = habitService.getTodayHabits(userId);
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
+        List<MainPageHabit> result = habitService.getTodayHabits(userId);
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("습관 정보가 없습니다.");
         }
-        // User user = (User) userService.loadUserByUsername(userId);
         return ResponseEntity.ok(new MainPageResponse(user.getImage(), result));
-        // return new String();
     }
     
     @GetMapping("/home/{date}")
@@ -66,10 +63,9 @@ public class HabitController {
     }
     
     @PostMapping("/home/habit/create")
-    public ResponseEntity createHabit(@RequestBody CreateHabitRequest dto) {
+    public ResponseEntity<String> createHabit(@RequestBody CreateHabitRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         habitService.createHabit(userId, dto);
@@ -79,8 +75,7 @@ public class HabitController {
     @GetMapping("/home/habit/{habitId}")
     public ResponseEntity getEditHabitPage(@PathVariable int habitId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         EditHabitPageResponse result = habitService.getHabitById(userId, habitId);
@@ -91,10 +86,9 @@ public class HabitController {
     }
 
     @PutMapping("/home/habit/change/{habitId}")
-    public ResponseEntity putMethodName(@PathVariable int habitId, @RequestBody EditHabitRequest dto) {
+    public ResponseEntity<String> editHabit(@PathVariable int habitId, @RequestBody EditHabitRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         Habit result = habitService.editHabit(userId, habitId, dto);
@@ -105,10 +99,9 @@ public class HabitController {
     }
     
     @DeleteMapping("/home/habit/delete/{habitId}")
-    public ResponseEntity deleteHabit(@PathVariable int habitId) {
+    public ResponseEntity<String> deleteHabit(@PathVariable int habitId) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         habitService.deleteHabit(habitId);
@@ -116,10 +109,9 @@ public class HabitController {
     }
     
     @PutMapping("home/habit/check/{habitId}")
-    public ResponseEntity putMethodName(@PathVariable int habitId, @RequestBody CheckHabitRequest dto) {
+    public ResponseEntity<String> checkHabit(@PathVariable int habitId, @RequestBody CheckHabitRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         habitService.checkHabit(userId, habitId, dto);

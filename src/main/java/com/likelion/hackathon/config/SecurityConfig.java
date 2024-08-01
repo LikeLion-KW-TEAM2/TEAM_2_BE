@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -53,7 +54,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors((cors) -> cors.configurationSource(new CorsConfigurationSource() {
                     @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                    public CorsConfiguration getCorsConfiguration(@NonNull HttpServletRequest request) {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 

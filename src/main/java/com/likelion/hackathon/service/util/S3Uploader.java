@@ -26,7 +26,7 @@ public class S3Uploader {
             String originalFileName = multipartFile.getOriginalFilename();
             // 이미지를 s3에 저장하기 위한 정보 설정(images/파일이름)
             String fileName = "images/" + userId;
-            
+
             // MultipartFile를 file로 변환
             File uploadFile = new File(originalFileName);
             FileOutputStream fos = new FileOutputStream(uploadFile);
@@ -37,6 +37,7 @@ public class S3Uploader {
 
             // 업로드를 위해 임시로 스프링이 가지고 있던 이미지 파일 삭제
             uploadFile.delete();
+            fos.close();
 
             // 이미지의 위치에 대한 Url 반환
             return uploadImageUrl;

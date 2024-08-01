@@ -5,14 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.likelion.hackathon.domain.User;
 import com.likelion.hackathon.dto.request.user.EditDefaultImageRequest;
-import com.likelion.hackathon.dto.request.user.EditImageRequest;
+import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.dto.request.user.EditPasswordRequest;
-import com.likelion.hackathon.dto.request.user.EditinfoRequest;
+import com.likelion.hackathon.dto.response.user.DoneHabitResponse;
 import com.likelion.hackathon.dto.request.user.IdValidateRequest;
 import com.likelion.hackathon.dto.request.user.SignupRequest;
-import com.likelion.hackathon.dto.response.friend.FriendListElement;
-import com.likelion.hackathon.dto.response.user.DoneHabitResponse;
-import com.likelion.hackathon.dto.response.user.MypageProfileResponse;
 import com.likelion.hackathon.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +25,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -53,8 +49,7 @@ public class UserController {
     @GetMapping("/icecream")
     public ResponseEntity getIcecream() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(userService.getIcecream(userId));
@@ -80,31 +75,19 @@ public class UserController {
         return ResponseEntity.ok(new MypageProfileResponse(user.getName(), user.getImage()));
     }
 
-    // @PostMapping("/mypage/edit")
-    // public ResponseEntity editInfo(@RequestBody EditinfoRequest dto) {
-    //     String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-    //     User user = (User) userService.loadUserByUsername(userId);
-    //     if (user == null) {
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
-    //     }
-    //     return ResponseEntity.ok(userService.editInfo(userId, dto));
-    // }
-
     @PostMapping("/mypage/edit/image")
     public ResponseEntity editImage(@RequestParam("image") MultipartFile image, @RequestParam("name") String name) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(userService.editImage(userId, image, name));
     }
 
     @PostMapping("/mypage/edit/defaultimage")
-    public ResponseEntity postMethodName(@RequestBody EditDefaultImageRequest dto) {
+    public ResponseEntity editDefaultImage(@RequestBody EditDefaultImageRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         
@@ -114,8 +97,7 @@ public class UserController {
     @PostMapping("/mypage/edit/password")
     public ResponseEntity<String> editPassword(@RequestBody EditPasswordRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         userService.editPassword(userId, dto);
@@ -125,8 +107,7 @@ public class UserController {
     @DeleteMapping("/mypage/remove")
     public ResponseEntity<String> removeUser() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         userService.removeUser(userId);
@@ -136,18 +117,16 @@ public class UserController {
     @GetMapping("/mypage/friend")
     public ResponseEntity getFriendList() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(userService.getFriendList(userId));
     }
     
     @DeleteMapping("/mypage/friend/{id}")
-    public ResponseEntity deleteFriend(@PathVariable String id) {
+    public ResponseEntity<String> deleteFriend(@PathVariable String id) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
         }
         userService.deleteFriend(userId, id);
@@ -157,8 +136,7 @@ public class UserController {
     @GetMapping("/mypage/donehabits")
     public ResponseEntity getDoneHabits() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 정보가 올바르지 않습니다.");
         }
         List<DoneHabitResponse> result = userService.getDoneHabits(userId);

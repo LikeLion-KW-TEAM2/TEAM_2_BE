@@ -33,18 +33,16 @@ public class FriendController {
     @GetMapping("/friend")
     public ResponseEntity getFriendList() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(friendService.getFriendList(userId));
     }
 
     @PostMapping("/friend/create")
-    public ResponseEntity createFriend(@RequestBody CreateFriendRequest dto) {
+    public ResponseEntity<String> createFriend(@RequestBody CreateFriendRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         friendService.createFriend(userId, dto);
@@ -54,8 +52,7 @@ public class FriendController {
     @GetMapping(value = "/friend/search", params = "id")
     public ResponseEntity searchFriend(@RequestParam String id) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         List<FriendSearchElement> result = friendService.friendSearch(id, userId);
@@ -68,15 +65,14 @@ public class FriendController {
     @GetMapping("/friend/icecream/{id}")
     public ResponseEntity getFriendIcecream(@PathVariable String id) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = (User) userService.loadUserByUsername(userId);
-        if (user == null) {
+        if (!userService.isValidUser(userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보가 올바르지 않습니다.");
         }
         return ResponseEntity.ok(friendService.getFriendIcecream(id));
     }
 
     @PostMapping("/friend/guestbook")
-    public ResponseEntity createGuestbook(@RequestBody CreateGuestbookRequest dto) {
+    public ResponseEntity<String> createGuestbook(@RequestBody CreateGuestbookRequest dto) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = (User) userService.loadUserByUsername(userId);
         if (user == null) {
