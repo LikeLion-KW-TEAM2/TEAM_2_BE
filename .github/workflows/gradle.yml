@@ -36,6 +36,7 @@ jobs:
     
     - name: application.properties 작성
       run: |
+        mkdir ./src/main/resources
         touch ./src/main/resources/application.properties
         echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
         cat ./src/main/resources/application.properties
