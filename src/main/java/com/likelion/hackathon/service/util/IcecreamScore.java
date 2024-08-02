@@ -38,9 +38,11 @@ public class IcecreamScore {
                             .minusDays(30))
                     .size();
         }
+        System.out.println("total : " + totalDate);
+        System.out.println("check : " + checkedDate);
         float icereamStatusScore = 0;
         try {
-            icereamStatusScore = 100 * (checkedDate / totalDate);
+            icereamStatusScore = 100 * (1 - (checkedDate / totalDate));
         } catch (ArithmeticException e) {
             icereamStatusScore = 0;
         }
