@@ -1,7 +1,6 @@
 package com.likelion.hackathon.service.util;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -24,23 +23,24 @@ public class IcecreamScore {
         List<Habit> ongoingHabit = habitRepository.findAllByUserIdAndOvercome(userId, 0);
         float totalDate = 0;
         float checkedDate = 0;
+        LocalDate today = LocalDate.now();
+        LocalDate referenceDate = LocalDate.of(today.getYear(), today.getMonth().minus(1),
+                today.getMonth().minus(1).length(false));
+        float icereamStatusScore = 0;
+
         for (Habit habit : ongoingHabit) {
-            int period = Period.between(habit.getCreatedAt().minusDays(1), LocalDate.now()).getDays();
-            System.out.println(period);
-            if (period > 30) {
-                totalDate += 30;
+            if (today.getMonth() == habit.getCreatedAt().getMonth()) {
+                totalDate += (today.lengthOfMonth() - habit.getCreatedAt().getDayOfMonth() + 1);
             }
-            if (period <= 30) {
-                totalDate += period;
+            if (today.getMonth() != habit.getCreatedAt().getMonth()) {
+                totalDate += today.lengthOfMonth();
             }
             checkedDate += historyRepository
-                    .findAllByHabitIdAndStatusAndDateAfter(habit.getId(), 1, LocalDate.now()
-                            .minusDays(30))
+                    .findAllByHabitIdAndStatusAndDateAfter(habit.getId(), 1,
+                            referenceDate)
                     .size();
         }
-        System.out.println("total : " + totalDate);
-        System.out.println("check : " + checkedDate);
-        float icereamStatusScore = 0;
+
         try {
             icereamStatusScore = 100 * (1 - (checkedDate / totalDate));
         } catch (ArithmeticException e) {
