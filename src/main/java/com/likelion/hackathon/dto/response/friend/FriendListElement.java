@@ -8,6 +8,6 @@ import lombok.Data;
 public class FriendListElement {
     private String userId;
     private String name;
-    private String iamge;
+    private String image;
     private int count;
 }
